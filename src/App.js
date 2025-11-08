@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './services/supabase';
 import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 import Dashboard from './pages/Dashboard';
+import BillDetail from './pages/BillDetail';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -10,13 +12,11 @@ function App() {
   const [showSignup, setShowSignup] = useState(false);
 
   useEffect(() => {
-    // Check if user is logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -46,7 +46,15 @@ function App() {
     );
   }
 
-  return <Dashboard user={user} onLogout={handleLogout} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard user={user} onLogout={handleLogout} />} />
+        <Route path="/bill/:billId" element={<BillDetail user={user} onLogout={handleLogout} />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { Upload, FileText, AlertCircle } from 'lucide-react';
+import { extractTextFromFile, cleanExtractedText } from '../../services/ocrService';
+import { Upload, FileText, AlertCircle, Loader2 } from 'lucide-react';
+import { analyzeMedicalBill } from '../../services/aiAnalysisOpenAI';
 
 export default function FileUploader({ onUploadComplete }) {
   const [file, setFile] = useState(null);
@@ -46,7 +48,7 @@ export default function FileUploader({ onUploadComplete }) {
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
 
-      setProgress(30);
+      setProgress(10);
 
       // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
@@ -55,28 +57,43 @@ export default function FileUploader({ onUploadComplete }) {
 
       if (uploadError) throw uploadError;
 
-      setProgress(60);
+      setProgress(30);
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('medical-bills')
-        .getPublicUrl(filePath);
+      // Extract text from the file using OCR
+      console.log('Starting OCR extraction...');
+      const ocrResult = await extractTextFromFile(file, (ocrProgress) => {
+        // Update progress: 30-70% for OCR
+        setProgress(30 + Math.round(ocrProgress * 0.4));
+      });
 
-      setProgress(80);
+      const extractedText = cleanExtractedText(ocrResult.text);
+      console.log('OCR extraction complete. Confidence:', ocrResult.confidence);
+      console.log('Extracted text preview:', extractedText.substring(0, 200));
 
-      // Create bill record in database
+      setProgress(75);
+
+      // Create bill record in database with extracted text
       const { data: billData, error: billError } = await supabase
         .from('medical_bills')
         .insert({
           user_id: user.id,
           file_name: file.name,
-          file_url: filePath, // Store the path, not public URL
-          status: 'uploaded'
+          file_url: filePath,
+          status: 'extracted' // Changed from 'uploaded' to 'extracted'
         })
         .select()
         .single();
 
       if (billError) throw billError;
+
+      setProgress(90);
+
+      // Send to AI for analysis
+      console.log('Starting AI analysis...');
+      setProgress(92);
+      
+      await analyzeMedicalBill(billData.id, extractedText);
+      console.log('AI analysis complete!');
 
       setProgress(100);
 
@@ -86,10 +103,14 @@ export default function FileUploader({ onUploadComplete }) {
 
       // Notify parent component
       if (onUploadComplete) {
-        onUploadComplete(billData);
+        onUploadComplete({
+          ...billData,
+          extractedText: extractedText,
+          ocrConfidence: ocrResult.confidence
+        });
       }
 
-      alert('Bill uploaded successfully! Processing will be added in next steps.');
+      alert(`Bill uploaded and text extracted successfully!\nOCR Confidence: ${Math.round(ocrResult.confidence)}%\nExtracted ${extractedText.length} characters`);
 
     } catch (error) {
       console.error('Upload error:', error);
@@ -157,7 +178,7 @@ export default function FileUploader({ onUploadComplete }) {
           </button>
         )}
 
-        {uploading && (
+{uploading && (
           <div className="mt-6">
             <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
               <div
@@ -165,9 +186,14 @@ export default function FileUploader({ onUploadComplete }) {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-center text-sm text-gray-600 mt-2">
-              Uploading... {progress}%
-            </p>
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+              <p className="text-sm text-gray-600">
+                {progress < 30 ? 'Uploading file...' : 
+                 progress < 75 ? 'Extracting text from document...' : 
+                 'Saving to database...'} {progress}%
+              </p>
+            </div>
           </div>
         )}
       </div>
