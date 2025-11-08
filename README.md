@@ -1,98 +1,123 @@
-# BillBuddy - AI-Powered Medical Bill Advocate
+## BillBuddy - AI-Powered Medical Bill Advocate
 
-BillBuddy is an AI-powered web application that helps patients analyze medical bills, detect billing errors, and generate dispute letters automatically.
+BillBuddy is a web application that leverages artificial intelligence to empower patients by analyzing their medical bills, accurately detecting common billing errors, and automatically generating professional dispute letters.
 
-## 🌟 Features
+-----
 
-- **AI Bill Analysis**: Upload medical bills (PDF/Image) and get instant AI-powered analysis
-- **Error Detection**: Automatically identifies:
-  - Duplicate charges
-  - Overcharges vs Medicare benchmarks
-  - Invalid billing codes
-  - Missing documentation
-- **OCR Text Extraction**: Extracts text from images and PDFs using Tesseract.js
-- **Dispute Tools**: Auto-generates professional dispute letters and email templates
-- **Savings Calculator**: Estimates potential savings from billing errors
-- **Secure Storage**: Bills and analysis stored securely in Supabase
+### Key Features
 
-## 🛠️ Tech Stack
+  * **AI Bill Analysis:** Upload medical bills (PDF or image) and receive instant, comprehensive analysis powered by AI.
+  * **Error Detection:** The system automatically identifies and flags critical billing issues, including:
+      * Duplicate charges
+      * Overcharges compared to standard benchmarks (e.g., Medicare rates)
+      * Invalid or outdated billing codes (e.g., CPT, ICD-10)
+      * Missing or insufficient documentation
+  * **OCR Text Extraction:** Utilizes Tesseract.js for robust and accurate text extraction from uploaded image and PDF documents.
+  * **Dispute Tools:** Streamlines the challenge process by auto-generating clear, professional dispute letters and email templates ready for submission.
+  * **Savings Calculator:** Provides an immediate estimate of potential financial savings resulting from identified billing errors.
+  * **Secure Data Storage:** All uploaded bills, analyses, and user data are stored securely using Supabase.
 
-- **Frontend**: React.js, Tailwind CSS
-- **Backend**: Supabase (PostgreSQL + Storage)
-- **AI**: OpenAI GPT-4o-mini
-- **OCR**: Tesseract.js
-- **Authentication**: Supabase Auth
-- **Deployment**: Vercel (planned)
+-----
 
-## 📦 Installation
+### Technology Stack
 
-1. Clone the repository:
-```bash
-git clone https://github.com/maya-na1k/billbuddy.git
-cd billbuddy
-```
+  * **Frontend:** React.js, Tailwind CSS
+  * **Backend & Database:** Supabase (PostgreSQL, Realtime, and Storage)
+  * **Artificial Intelligence:** OpenAI GPT-4o-mini
+  * **Optical Character Recognition (OCR):** Tesseract.js
+  * **Authentication:** Supabase Auth
+  * **Deployment (Planned):** Vercel
 
-2. Install dependencies:
-```bash
-npm install
-```
+-----
 
-3. Create `.env` file with your credentials:
-```
-REACT_APP_SUPABASE_URL=your_supabase_url
-REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
-REACT_APP_OPENAI_API_KEY=your_openai_api_key
-```
+### Installation and Setup
 
-4. Start the development server:
-```bash
-npm start
-```
+1.  **Clone the repository:**
 
-## 🚀 Usage
+    ```bash
+    git clone https://github.com/maya-na1k/billbuddy.git
+    cd billbuddy
+    ```
 
-1. Sign up for an account
-2. Upload a medical bill (PDF or image)
-3. Wait for AI analysis (30-60 seconds)
-4. Review detected issues and potential savings
-5. Generate dispute letters/emails
-6. Download or copy documents to send to billing department
+2.  **Install dependencies:**
 
-## 🎯 Problem Solved
+    ```bash
+    npm install
+    ```
 
-Medical billing errors affect 80% of medical bills, costing patients billions annually. BillBuddy democratizes access to billing expertise by:
-- Making bill analysis accessible to everyone
-- Reducing financial stress during medical crises
-- Empowering patients to challenge unfair charges
-- Providing professional dispute tools without expensive advocates
+3.  **Configure environment variables:** Create a file named `.env` in the project root and populate it with your credentials:
 
-## 📊 Database Schema
+    ```
+    REACT_APP_SUPABASE_URL=your_supabase_url
+    REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+    REACT_APP_OPENAI_API_KEY=your_openai_api_key
+    ```
 
-- **profiles**: User information
-- **medical_bills**: Uploaded bills metadata
-- **bill_line_items**: Individual charges from bills
-- **bill_analyses**: AI analysis results
-- **dispute_documents**: Generated dispute letters
+4.  **Start the development server:**
 
-## 🔐 Security
+    ```bash
+    npm start
+    ```
 
-- Row-level security (RLS) enabled on all tables
-- Secure file storage with user-based access control
-- Environment variables for API keys
-- Authentication required for all features
+-----
 
-## 🤝 Contributing
+### Usage Workflow
 
-This is a hackathon project. Contributions welcome!
+1.  **Sign Up:** Create a secure user account.
+2.  **Upload:** Upload a medical bill in PDF or image format.
+3.  **Analyze:** Wait for the AI analysis process (typically 30-60 seconds).
+4.  **Review:** Examine the detected billing issues and the estimated potential savings.
+5.  **Dispute:** Utilize the integrated tools to generate customized dispute letters or emails.
+6.  **Send:** Download or copy the generated documents for submission to the billing department.
 
-## 📝 License
+-----
 
-MIT License
+### Addressing the Problem
 
-## 👥 Team
+The complexity and prevalence of medical billing errors are a significant financial burden, with studies suggesting errors affect up to 80% of medical bills. BillBuddy provides a scalable solution to this systemic problem by democratizing access to billing expertise:
 
-Built with ❤️ for patient advocacy
+  * It makes professional-grade bill analysis accessible to all patients.
+  * It significantly reduces financial anxiety during and after medical events.
+  * It empowers patients to confidently challenge erroneous or unfair charges.
+  * It provides the necessary tools for professional disputes without the expense of a human advocate.
 
----
+-----
 
-**Note**: This is an MVP built for demonstration purposes. Always consult with healthcare professionals and billing experts for official disputes.
+### Database Schema Overview
+
+The application utilizes a relational structure to manage all user and bill data:
+
+  * `profiles`: Stores core user information.
+  * `medical_bills`: Contains metadata for uploaded bills.
+  * `bill_line_items`: Detailed individual charges extracted from the bills.
+  * `bill_analyses`: Stores the results and findings of the AI analysis.
+  * `dispute_documents`: Records generated dispute letters and templates.
+
+-----
+
+### Security Measures
+
+Security and data privacy are paramount in BillBuddy:
+
+  * **Row-Level Security (RLS):** Enabled across all database tables to ensure users can only access their own data.
+  * **Secure File Storage:** Bills are stored securely with user-based access control policies.
+  * **API Key Protection:** Sensitive API keys are managed using environment variables.
+  * **Authentication:** All application features require user authentication.
+
+-----
+
+### Contributing
+
+BillBuddy was initially developed as a hackathon project. We welcome and appreciate contributions from the open-source community to enhance its features and reliability.
+
+### License
+
+This project is licensed under the **MIT License**.
+
+### Team Note
+
+This application was built with a dedication to patient advocacy.
+
+**Disclaimer:** This is a Minimum Viable Product (MVP) created for demonstration purposes. Users should always consider consulting with qualified healthcare professionals or certified billing experts for official legal or financial dispute actions.
+
+-----
