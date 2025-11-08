@@ -38,13 +38,13 @@ export default function BillDetail({ user, onLogout }) {
             <div className="text-right hidden md:block">
               <p className="text-sm text-gray-500">Welcome back,</p>
               <p className="text-sm font-semibold text-gray-900">{user.email}</p>
-            </div>
-            <button
-              onClick={onLogout}
-              className="px-5 py-2 text-gray-700 hover:text-red-600 font-medium transition-colors"
-            >
-              Logout
-            </button>
+              </div>
+              <button
+                onClick={onLogout}
+                className="border border-purple-500 text-purple-600 px-5 py-2 rounded-full hover:bg-purple-50 transition-all font-medium"
+              >
+                Logout
+              </button>
           </div>
         </div>
       </nav>
