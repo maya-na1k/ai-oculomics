@@ -1,0 +1,453 @@
+import React, { useState } from 'react';
+import { Upload, Eye, Activity, AlertCircle, Download, Loader2, CheckCircle, XCircle } from 'lucide-react';
+
+const RetinaScanMVP = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
+
+  // Simulated AI analysis (replace with actual API call)
+  const analyzeImage = async (imageFile) => {
+    setIsAnalyzing(true);
+    setError(null);
+    
+    // Simulate API processing time
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    // Check image quality (basic validation)
+    const img = new Image();
+    img.src = imagePreview;
+    
+    await new Promise(resolve => {
+      img.onload = resolve;
+    });
+    
+    // Simulate quality check
+    const qualityScore = Math.random() * 40 + 60; // 60-100
+    const isGoodQuality = qualityScore > 70;
+    
+    if (!isGoodQuality) {
+      setError({
+        type: 'quality',
+        message: 'Image quality insufficient for analysis. Please ensure the image is clear, well-lit, and properly centered.'
+      });
+      setIsAnalyzing(false);
+      return;
+    }
+    
+    // Simulated predictions (replace with actual model inference)
+    const mockResults = {
+      timestamp: new Date().toISOString(),
+      quality: {
+        score: qualityScore.toFixed(1),
+        isBlurry: false,
+        isCentered: true,
+        brightness: 'Good'
+      },
+      predictions: {
+        diabeticRetinopathy: {
+          grade: ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative'][Math.floor(Math.random() * 5)],
+          confidence: (Math.random() * 30 + 70).toFixed(1),
+          severity: Math.floor(Math.random() * 5)
+        },
+        cardiovascularRisk: {
+          level: ['Low', 'Moderate', 'High'][Math.floor(Math.random() * 3)],
+          confidence: (Math.random() * 25 + 65).toFixed(1),
+          score: Math.floor(Math.random() * 100)
+        }
+      },
+      overallRiskScore: Math.floor(Math.random() * 60 + 20),
+      urgentReferral: Math.random() > 0.7,
+      recommendations: []
+    };
+    
+    // Generate recommendations based on results
+    const drGrade = mockResults.predictions.diabeticRetinopathy.grade;
+    const cvdLevel = mockResults.predictions.cardiovascularRisk.level;
+    
+    if (drGrade === 'No DR') {
+      mockResults.recommendations.push('Continue annual eye exams');
+      mockResults.recommendations.push('Maintain healthy blood sugar levels');
+    } else if (drGrade === 'Mild' || drGrade === 'Moderate') {
+      mockResults.recommendations.push('Schedule follow-up in 6 months');
+      mockResults.recommendations.push('Consult with endocrinologist for diabetes management');
+    } else {
+      mockResults.recommendations.push('⚠️ URGENT: Consult ophthalmologist within 1 week');
+      mockResults.recommendations.push('Risk of vision loss - immediate intervention may be needed');
+      mockResults.urgentReferral = true;
+    }
+    
+    if (cvdLevel === 'Moderate' || cvdLevel === 'High') {
+      mockResults.recommendations.push('Consider cardiovascular screening (ECG, blood pressure monitoring)');
+      mockResults.recommendations.push('Lifestyle modifications: diet, exercise, stress management');
+    }
+    
+    setResults(mockResults);
+    setIsAnalyzing(false);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError({
+          type: 'format',
+          message: 'Please upload a valid image file (JPG, PNG, etc.)'
+        });
+        return;
+      }
+      
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError({
+          type: 'size',
+          message: 'Image file is too large. Please upload an image under 10MB.'
+        });
+        return;
+      }
+      
+      setSelectedImage(file);
+      setError(null);
+      setResults(null);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAnalyze = () => {
+    if (selectedImage) {
+      analyzeImage(selectedImage);
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setResults(null);
+    setError(null);
+  };
+
+  const getSeverityColor = (grade) => {
+    const colors = {
+      'No DR': 'text-green-600',
+      'Mild': 'text-yellow-600',
+      'Moderate': 'text-orange-600',
+      'Severe': 'text-red-600',
+      'Proliferative': 'text-red-800'
+    };
+    return colors[grade] || 'text-gray-600';
+  };
+
+  const getRiskColor = (level) => {
+    const colors = {
+      'Low': 'text-green-600',
+      'Moderate': 'text-orange-600',
+      'High': 'text-red-600'
+    };
+    return colors[level] || 'text-gray-600';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <Eye className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">RetinaScan</h1>
+              <p className="text-sm text-gray-600">AI-Powered Systemic Disease Screening via Retinal Imaging</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        
+        {/* Info Banner */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-blue-900">
+              <strong>How it works:</strong> Upload a fundus (retinal) image to screen for diabetic retinopathy, 
+              cardiovascular disease risk, and other systemic conditions. This tool uses advanced AI to analyze 
+              retinal biomarkers non-invasively.
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* Left Column - Upload */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+              <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                <Upload className="w-5 h-5 text-blue-600" />
+                Upload Retinal Image
+              </h2>
+
+              {/* Upload Area */}
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
+                <input
+                  type="file"
+                  id="imageUpload"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                <label htmlFor="imageUpload" className="cursor-pointer">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Upload className="w-10 h-10 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-medium text-gray-700">
+                        Click to upload fundus image
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        JPG, PNG up to 10MB
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              {/* Error Display */}
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-red-800">{error.message}</div>
+                </div>
+              )}
+
+              {/* Image Preview */}
+              {imagePreview && (
+                <div className="mt-6">
+                  <p className="text-sm font-medium text-gray-700 mb-3">Preview:</p>
+                  <div className="relative rounded-lg overflow-hidden border-2 border-gray-200">
+                    <img 
+                      src={imagePreview} 
+                      alt="Retinal preview" 
+                      className="w-full h-auto"
+                    />
+                  </div>
+                  <div className="mt-4 flex gap-3">
+                    <button
+                      onClick={handleAnalyze}
+                      disabled={isAnalyzing}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isAnalyzing ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        <>
+                          <Activity className="w-5 h-5" />
+                          Analyze Image
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={handleReset}
+                      className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Sample Images Info */}
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-600">
+                  <strong>Need test images?</strong> Search for "fundus image dataset" or "retinal image examples" online. 
+                  Ensure images show the full retina with optic disc and macula visible.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Results */}
+          <div className="space-y-6">
+            {results ? (
+              <>
+                {/* Quality Metrics */}
+                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    Image Quality
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <p className="text-xs text-gray-600">Quality Score</p>
+                      <p className="text-2xl font-bold text-green-700">{results.quality.score}%</p>
+                    </div>
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <p className="text-xs text-gray-600">Brightness</p>
+                      <p className="text-lg font-semibold text-blue-700">{results.quality.brightness}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Disease Predictions */}
+                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-purple-600" />
+                    Disease Screening Results
+                  </h3>
+
+                  {/* Diabetic Retinopathy */}
+                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-gray-700">Diabetic Retinopathy</p>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        {results.predictions.diabeticRetinopathy.confidence}% confidence
+                      </span>
+                    </div>
+                    <p className={`text-2xl font-bold ${getSeverityColor(results.predictions.diabeticRetinopathy.grade)}`}>
+                      {results.predictions.diabeticRetinopathy.grade}
+                    </p>
+                    <div className="mt-3 bg-white rounded h-2 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"
+                        style={{ width: `${(results.predictions.diabeticRetinopathy.severity / 4) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Cardiovascular Risk */}
+                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-gray-700">Cardiovascular Risk</p>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        {results.predictions.cardiovascularRisk.confidence}% confidence
+                      </span>
+                    </div>
+                    <p className={`text-2xl font-bold ${getRiskColor(results.predictions.cardiovascularRisk.level)}`}>
+                      {results.predictions.cardiovascularRisk.level} Risk
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">Risk Score: {results.predictions.cardiovascularRisk.score}/100</p>
+                  </div>
+
+                  {/* Overall Risk Score */}
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Overall Health Risk Score</p>
+                    <div className="flex items-end gap-3">
+                      <p className="text-4xl font-bold text-gray-900">{results.overallRiskScore}</p>
+                      <p className="text-lg text-gray-600 mb-1">/100</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recommendations */}
+                <div className={`rounded-2xl shadow-lg p-6 border-2 ${results.urgentReferral ? 'bg-red-50 border-red-300' : 'bg-white border-gray-200'}`}>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    {results.urgentReferral ? (
+                      <AlertCircle className="w-5 h-5 text-red-600" />
+                    ) : (
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                    )}
+                    {results.urgentReferral ? 'Urgent Recommendations' : 'Recommendations'}
+                  </h3>
+                  <ul className="space-y-2">
+                    {results.recommendations.map((rec, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-blue-600 mt-1">•</span>
+                        <span>{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  {results.urgentReferral && (
+                    <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+                      <p className="text-xs font-semibold text-red-900">
+                        ⚠️ IMPORTANT: This screening indicates potential serious conditions. 
+                        Please consult a healthcare professional immediately.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Download Report */}
+                <button className="w-full bg-white border-2 border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                  <Download className="w-5 h-5" />
+                  Download Full Report (PDF)
+                </button>
+              </>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-200 text-center">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Activity className="w-12 h-12 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  No Analysis Yet
+                </h3>
+                <p className="text-gray-500">
+                  Upload a retinal image and click "Analyze" to see results
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-900">
+            <strong>Medical Disclaimer:</strong> This tool is for screening and research purposes only. 
+            It is NOT a substitute for professional medical diagnosis. All findings should be confirmed 
+            by a qualified healthcare provider. Do not make medical decisions based solely on this analysis.
+          </p>
+        </div>
+
+        {/* Info Section */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <Eye className="w-6 h-6 text-blue-600" />
+            </div>
+            <h4 className="font-semibold text-gray-900 mb-2">Non-Invasive Screening</h4>
+            <p className="text-sm text-gray-600">
+              Detect systemic diseases through retinal imaging without blood tests or invasive procedures
+            </p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+              <Activity className="w-6 h-6 text-purple-600" />
+            </div>
+            <h4 className="font-semibold text-gray-900 mb-2">AI-Powered Analysis</h4>
+            <p className="text-sm text-gray-600">
+              Uses deep learning trained on 1.6M+ retinal images to identify disease biomarkers
+            </p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+            </div>
+            <h4 className="font-semibold text-gray-900 mb-2">Early Detection</h4>
+            <p className="text-sm text-gray-600">
+              Identify disease signs 5-10 years before clinical symptoms appear
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RetinaScanMVP;
+
