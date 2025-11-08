@@ -70,7 +70,13 @@ INSTRUCTIONS:
 3. Each line typically has: Date, Description, Code, Quantity, and Charge amount
 4. Codes can be: CPT (5 digits), REV (4 digits), NDC (drug codes), ICD (diagnosis)
 5. Use the "Charges" or "Total Charges" column (NOT "Allowed" or "Insurance Paid")
-6. Count how many line items you see - extract ALL of them
+6. For service_date:
+   - First look for "Service Date" or "Date of Service" 
+   - If not found, use "Admission Date"
+   - If neither exists, use the first date you see related to when care was provided
+   - DO NOT use "Statement Date" or "Bill Date"
+7. Format dates as YYYY-MM-DD (e.g., September 12, 2024 becomes 2024-09-12)
+8. If you see multiple service dates, use the PRIMARY service date (usually the first or most prominent one)
 
 Return ONLY valid JSON (no markdown, no explanation):
 {
@@ -99,7 +105,9 @@ CRITICAL RULES:
 - Include items even if they have $0 charges
 - Include duplicate codes if they appear multiple times
 - For line_items array, extract EVERY row from the itemized charges table
-- Double-check you didn't skip any lines`;
+- Double-check you didn't skip any lines
+- IMPORTANT: service_date priority: (1) Service Date, (2) Admission Date, (3) First relevant date
+- NEVER use Statement Date, Bill Date, or Due Date for service_date`;
 
   try {
     console.log('Calling GPT-4o for extraction...');
@@ -120,7 +128,8 @@ CRITICAL RULES:
     
     const data = JSON.parse(text);
     
-    console.log('=== EXTRACTED LINE ITEMS ===');
+    console.log('=== EXTRACTED DATA ===');
+    console.log('Service Date:', data.service_date);
     console.log('Total line items:', data.line_items?.length);
     
     // Log each line item
@@ -404,3 +413,4 @@ async function saveAnalysis(billId, analysisReport) {
   
   if (error) throw error;
 }
+
