@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { extractTextFromFile, cleanExtractedText } from '../../services/ocrService';
-import { Upload, FileText, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, FileText, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 import { analyzeMedicalBill } from '../../services/aiAnalysisOpenAI';
 
 export default function FileUploader({ onUploadComplete }) {
@@ -162,18 +162,21 @@ Patient Responsibility:                              $142.50`;
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold mb-6">Upload Medical Bill</h2>
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+        <h2 className="text-3xl font-bold mb-2 text-gray-900">Upload Medical Bill</h2>
+        <p className="text-gray-600 mb-8">Upload your bill to get instant AI-powered analysis</p>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded flex items-start gap-2">
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-2xl flex items-start gap-3">
             <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-            <span>{error}</span>
+            <span className="font-medium">{error}</span>
           </div>
         )}
 
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition">
+        <div className="border-2 border-dashed border-purple-200 rounded-2xl p-12 text-center hover:border-purple-400 hover:bg-purple-50/30 transition-all relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          
           <input
             type="file"
             accept=".pdf,.jpg,.jpeg,.png"
@@ -185,22 +188,30 @@ Patient Responsibility:                              $142.50`;
           
           <label
             htmlFor="file-upload"
-            className="cursor-pointer flex flex-col items-center"
+            className="cursor-pointer flex flex-col items-center relative z-10"
           >
             {file ? (
               <>
-                <FileText className="w-16 h-16 text-blue-500 mb-4" />
-                <p className="text-lg font-medium text-gray-900 mb-2">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mb-4">
+                  <FileText className="w-10 h-10 text-purple-600" />
+                </div>
+                <p className="text-lg font-semibold text-gray-900 mb-1">
                   {file.name}
                 </p>
                 <p className="text-sm text-gray-500">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-600 font-medium">
+                  <CheckCircle className="w-4 h-4" />
+                  Ready to upload
+                </div>
               </>
             ) : (
               <>
-                <Upload className="w-16 h-16 text-gray-400 mb-4" />
-                <p className="text-lg font-medium text-gray-900 mb-2">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Upload className="w-10 h-10 text-purple-600" />
+                </div>
+                <p className="text-lg font-semibold text-gray-900 mb-2">
                   Click to upload or drag and drop
                 </p>
                 <p className="text-sm text-gray-500">
@@ -214,31 +225,107 @@ Patient Responsibility:                              $142.50`;
         {file && !uploading && (
           <button
             onClick={handleUpload}
-            className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium transition"
+            className="mt-8 w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-4 px-6 rounded-2xl hover:shadow-xl font-semibold transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
-            Upload Bill
+            <Upload className="w-5 h-5" />
+            Analyze Bill with AI
           </button>
         )}
 
-{uploading && (
-          <div className="mt-6">
-            <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+        {uploading && (
+          <div className="mt-8">
+            <div className="bg-purple-100 rounded-full h-3 overflow-hidden">
               <div
-                className="bg-blue-600 h-full transition-all duration-300"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 h-full transition-all duration-300 rounded-full"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-              <p className="text-sm text-gray-600">
-                {progress < 30 ? 'Uploading file...' : 
-                 progress < 75 ? 'Extracting text from document...' : 
-                 'Saving to database...'} {progress}%
-              </p>
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {progress < 30 ? 'Uploading file...' : 
+                     progress < 75 ? 'Extracting text from document...' : 
+                     progress < 100 ? 'Analyzing with AI...' : 'Complete!'}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    This may take a moment
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-purple-600">{progress}%</p>
+              </div>
+            </div>
+            
+            {/* Progress Steps */}
+            <div className="mt-6 space-y-3">
+              <ProgressStep 
+                label="Upload file" 
+                completed={progress > 30}
+                active={progress <= 30}
+              />
+              <ProgressStep 
+                label="Extract text with OCR" 
+                completed={progress > 75}
+                active={progress > 30 && progress <= 75}
+              />
+              <ProgressStep 
+                label="AI analysis & detection" 
+                completed={progress === 100}
+                active={progress > 75 && progress < 100}
+              />
             </div>
           </div>
         )}
       </div>
+
+      {/* Info Cards */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InfoCard 
+          title="Secure & Private"
+          description="Your data is encrypted and never shared"
+        />
+        <InfoCard 
+          title="Fast Analysis"
+          description="Get results in under 60 seconds"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ProgressStep({ label, completed, active }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+        completed ? 'bg-gradient-to-br from-green-500 to-green-600' :
+        active ? 'bg-gradient-to-br from-purple-500 to-pink-500' :
+        'bg-gray-200'
+      }`}>
+        {completed ? (
+          <CheckCircle className="w-4 h-4 text-white" />
+        ) : (
+          <div className={`w-2 h-2 rounded-full ${active ? 'bg-white' : 'bg-gray-400'}`}></div>
+        )}
+      </div>
+      <span className={`text-sm font-medium ${
+        completed || active ? 'text-gray-900' : 'text-gray-500'
+      }`}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function InfoCard({ title, description }) {
+  return (
+    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100">
+      <p className="font-semibold text-gray-900 text-sm mb-1">{title}</p>
+      <p className="text-xs text-gray-600">{description}</p>
     </div>
   );
 }
