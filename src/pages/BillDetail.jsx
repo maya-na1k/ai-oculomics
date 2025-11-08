@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import BillAnalysisView from '../components/analysis/BillAnalysisView';
 import { ArrowLeft } from 'lucide-react';
+import DisputeLetterGenerator from '../components/reports/DisputeLetterGenerator';
 
 export default function BillDetail({ user, onLogout }) {
   const { billId } = useParams();
@@ -54,7 +55,12 @@ export default function BillDetail({ user, onLogout }) {
 
       {/* Bill Analysis */}
       {bill && bill.status === 'analyzed' ? (
-        <BillAnalysisView billId={billId} />
+        <>
+          <BillAnalysisView billId={billId} />
+          <div className="max-w-6xl mx-auto px-6 pb-8">
+            <DisputeLetterGenerator billId={billId} />
+          </div>
+        </>
       ) : (
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <p className="text-gray-600">
