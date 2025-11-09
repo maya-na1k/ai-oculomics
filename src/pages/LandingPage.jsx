@@ -144,7 +144,7 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
                 
                 <StatBubble
                     value="80%"
-                    title="Billing Errors Are Everywhere"
+                    title="Contain Errors"
                     description="Over 80% of U.S. medical bills contain errors"
                     colorClass="bg-gradient-to-br from-red-200 to-orange-300 text-red-800 ring-red-300"
                 />
