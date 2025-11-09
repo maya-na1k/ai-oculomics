@@ -88,7 +88,9 @@ export default function BillAnalysisView({ billId }) {
     }
   };
 
-  const config = severityConfig[analysis.detailed_report?.severity || 'low'];
+  // SAFER: Always fall back to 'low' if the mapping doesn't exist
+  const severity = analysis.detailed_report?.severity;
+  const config = severityConfig[severity] || severityConfig['low'];
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
