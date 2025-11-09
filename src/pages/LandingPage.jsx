@@ -77,7 +77,7 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
               onClick={onShowLogin}
               className="px-4 py-2 text-gray-700 hover:text-purple-600 font-medium transition-colors text-lg"
             >
-              Sign In
+              Login
             </button>
             <button
               onClick={onShowSignup}
@@ -104,8 +104,8 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
         </h1>
 
         <p className="text-xl text-gray-600 mb-12 max-w-6xl mx-auto leading-relaxed"> 
-          BillBuddy helps patients reduce financial burden, strengthen their rights, and ensure fair billing so
-          everyone can focus on what matters most—their health and recovery.
+          BillBuddy helps patients uncover hidden billing errors, lower medical costs, and fight unfair charges—so 
+          they can focus on getting better, not going broke.
         </p>
 
         {/* Primary CTA */}
