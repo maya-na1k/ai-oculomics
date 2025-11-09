@@ -165,7 +165,7 @@ export default function Dashboard({ user, onLogout }) {
               <StatCard
                 icon={<DollarSign className="w-6 h-6" />}
                 title="Potential Savings"
-                value={`${stats.potentialSavings.toFixed(2)}`}
+                value={`$${stats.potentialSavings.toFixed(2)}`}
                 subtitle="+15% vs average"
                 subtitleColor="text-green-600"
                 badge="Ready to dispute"

@@ -114,7 +114,7 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
         </h1>
 
         <p className="text-xl text-gray-600 mb-12 max-w-6xl mx-auto leading-relaxed"> 
-          BillBuddy helps patients uncover hidden billing errors, lower medical costs, and fight unfair charges—so they can focus on getting better, not going broke.
+          BillBuddy helps patients uncover hidden billing errors, lower medical costs, and fight unfair charges; so they can focus on getting better, not going broke.
         </p>
 
         {/* Primary CTA */}

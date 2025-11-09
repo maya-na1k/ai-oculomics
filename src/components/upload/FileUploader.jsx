@@ -212,7 +212,7 @@ Patient Responsibility:                              $142.50`;
                   <Upload className="w-10 h-10 text-purple-600" />
                 </div>
                 <p className="text-lg font-semibold text-gray-900 mb-2">
-                  Click to upload or drag and drop
+                  Click to upload
                 </p>
                 <p className="text-sm text-gray-500">
                   PDF, JPG, or PNG (max 10MB)
