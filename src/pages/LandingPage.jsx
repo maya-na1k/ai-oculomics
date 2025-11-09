@@ -1,4 +1,4 @@
-import { Zap, FileText, DollarSign, ArrowRight } from 'lucide-react';
+import { Zap, FileText, DollarSign, ArrowRight, Shield, Lock, Brain } from 'lucide-react';
 
 // Custom Logo Component
 const BillBuddyIcon = ({ className = "w-8 h-8" }) => (
@@ -52,21 +52,12 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
     </div>
   );
 
-  const HowItWorksCard = ({ icon, title, description }) => (
-    <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-      <div className="text-purple-600 mb-4">{icon}</div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
-    </div>
-  );
-
-  const SimpleStep = ({ number, title, description }) => (
-    <div className="text-center">
-      <div className="w-16 h-16 bg-purple-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-        {number}
+  const ScrollingItem = ({ icon, text }) => (
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white backdrop-blur-sm">
+        {icon}
       </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600 leading-relaxed max-w-xs mx-auto">{description}</p>
+      <span className="text-xl font-bold text-white">{text}</span>
     </div>
   );
 
@@ -138,55 +129,134 @@ export default function LandingPage({ onShowLogin, onShowSignup }) {
         </div>
       </div>
 
-      {/* How BillBuddy Works Section */}
-      <div className="py-20 bg-white/70">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-12">How BillBuddy Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <HowItWorksCard
-              icon={<Zap className="w-8 h-8" />}
-              title="Instant Analysis"
-              description="Upload your bill and get AI-powered analysis in seconds"
-            />
-            <HowItWorksCard
-              icon={<FileText className="w-8 h-8" />}
-              title="Error Detection"
-              description="Automatically identify duplicate charges, overcharges, and invalid codes"
-            />
-            <HowItWorksCard
-              icon={<BillBuddyIcon className="w-8 h-8" />}
-              title="Dispute Tools"
-              description="Generate professional dispute letters and emails instantly"
-            />
-            <HowItWorksCard
-              icon={<DollarSign className="w-8 h-8" />}
-              title="Save Money"
-              description="Recover thousands in incorrect charges and billing errors"
-            />
+      {/* Scrolling Features Banner */}
+      <div className="py-12 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 overflow-hidden relative">
+        <div className="flex animate-scroll">
+          {/* First set */}
+          <div className="flex gap-16 items-center whitespace-nowrap px-8">
+            <ScrollingItem icon={<Zap className="w-6 h-6" />} text="Instant Analysis" />
+            <ScrollingItem icon={<FileText className="w-6 h-6" />} text="Error Detection" />
+            <ScrollingItem icon={<Shield className="w-6 h-6" />} text="Dispute Tools" />
+            <ScrollingItem icon={<DollarSign className="w-6 h-6" />} text="Save Money" />
+            <ScrollingItem icon={<Brain className="w-6 h-6" />} text="AI-Powered" />
+            <ScrollingItem icon={<Lock className="w-6 h-6" />} text="Secure & Private" />
+          </div>
+          {/* Duplicate set for seamless loop */}
+          <div className="flex gap-16 items-center whitespace-nowrap px-8">
+            <ScrollingItem icon={<Zap className="w-6 h-6" />} text="Instant Analysis" />
+            <ScrollingItem icon={<FileText className="w-6 h-6" />} text="Error Detection" />
+            <ScrollingItem icon={<Shield className="w-6 h-6" />} text="Dispute Tools" />
+            <ScrollingItem icon={<DollarSign className="w-6 h-6" />} text="Save Money" />
+            <ScrollingItem icon={<Brain className="w-6 h-6" />} text="AI-Powered" />
+            <ScrollingItem icon={<Lock className="w-6 h-6" />} text="Secure & Private" />
           </div>
         </div>
+        
+        <style jsx>{`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .animate-scroll {
+            animation: scroll 30s linear infinite;
+          }
+          .animate-scroll:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
       </div>
 
-      {/* Three Simple Steps Section */}
-      <div className="py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-16">Three Simple Steps</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <SimpleStep
-              number="1"
-              title="Upload Your Bill"
-              description="Simply upload a photo or PDF of your medical bill"
-            />
-            <SimpleStep
-              number="2"
-              title="AI Analysis"
-              description="Our AI scans for errors, overcharges, and billing mistakes"
-            />
-            <SimpleStep
-              number="3"
-              title="Dispute & Save"
-              description="Generate dispute letters and recover your money"
-            />
+      {/* Three Simple Steps Section - Flowchart */}
+      <div className="py-20 bg-white/70">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-4xl font-extrabold text-gray-900 mb-16 text-center">Three Simple Steps</h2>
+          
+          <div className="flex items-center justify-between gap-8">
+            {/* Step 1 */}
+            <div className="flex-1">
+              <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-purple-200 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                  1
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Upload Your Bill</h3>
+                <p className="text-gray-600 leading-relaxed text-center">Simply upload a photo or PDF of your medical bill</p>
+              </div>
+            </div>
+
+            {/* Arrow 1 */}
+            <div className="flex-shrink-0">
+              <ArrowRight className="w-12 h-12 text-purple-400" strokeWidth={3} />
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex-1">
+              <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-pink-200 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-pink-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                  2
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">AI Analysis</h3>
+                <p className="text-gray-600 leading-relaxed text-center">Our AI scans for errors, overcharges, and billing mistakes</p>
+              </div>
+            </div>
+
+            {/* Arrow 2 */}
+            <div className="flex-shrink-0">
+              <ArrowRight className="w-12 h-12 text-pink-400" strokeWidth={3} />
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex-1">
+              <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-green-200 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                  3
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Dispute & Save</h3>
+                <p className="text-gray-600 leading-relaxed text-center">Generate dispute letters and recover your money</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile View - Vertical Stack */}
+          <div className="md:hidden space-y-6">
+            <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-purple-200">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                1
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Upload Your Bill</h3>
+              <p className="text-gray-600 leading-relaxed text-center">Simply upload a photo or PDF of your medical bill</p>
+            </div>
+
+            <div className="flex justify-center">
+              <svg className="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
+
+            <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-pink-200">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-pink-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                2
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">AI Analysis</h3>
+              <p className="text-gray-600 leading-relaxed text-center">Our AI scans for errors, overcharges, and billing mistakes</p>
+            </div>
+
+            <div className="flex justify-center">
+              <svg className="w-12 h-12 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
+
+            <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-green-200">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 text-white rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 mx-auto shadow-lg">
+                3
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Dispute & Save</h3>
+              <p className="text-gray-600 leading-relaxed text-center">Generate dispute letters and recover your money</p>
+            </div>
           </div>
         </div>
       </div>
