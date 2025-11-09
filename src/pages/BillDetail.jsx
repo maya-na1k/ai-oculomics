@@ -2,8 +2,63 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import BillAnalysisView from '../components/analysis/BillAnalysisView';
-import { ArrowLeft, Shield, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import DisputeLetterGenerator from '../components/reports/DisputeLetterGenerator';
+
+// --- BillBuddyNavLogo Component for Navbar ---
+const BillBuddyNavLogo = () => {
+  return (
+    <div className="flex items-center gap-2">
+      {/* Bill Icon with Human and Dollar Sign */}
+      <div className="relative w-8 h-8">
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Document outline */}
+          <path
+            d="M20 10 C20 7 22 5 25 5 L65 5 L80 20 L80 90 C80 93 78 95 75 95 L25 95 C22 95 20 93 20 90 Z"
+            stroke="#7C3AED"
+            strokeWidth="6"
+            fill="white"
+          />
+          
+          {/* Folded corner */}
+          <path
+            d="M65 5 L65 20 L80 20"
+            stroke="#7C3AED"
+            strokeWidth="6"
+            fill="#E9D5FF"
+          />
+          
+          {/* Human icon in upper portion */}
+          <circle cx="42" cy="32" r="8" fill="#7C3AED" />
+          <path 
+            d="M42 42c-6 0-10 3-10 7v4c0 1 1 2 2 2h16c1 0 2-1 2-2v-4c0-4-4-7-10-7z" 
+            fill="#7C3AED"
+          />
+          
+          {/* Lines on document */}
+          <line x1="30" y1="62" x2="60" y2="62" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <line x1="30" y1="70" x2="60" y2="70" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          <line x1="30" y1="78" x2="50" y2="78" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+          
+          {/* Dollar sign circle */}
+          <circle cx="65" cy="72" r="16" fill="white" stroke="#7C3AED" strokeWidth="3" />
+          <text x="65" y="81" fontSize="22" fill="#7C3AED" fontWeight="bold" textAnchor="middle">$</text>
+        </svg>
+      </div>
+      
+      {/* Brand Name */}
+      <h1 className="text-2xl font-bold text-gray-900">
+        Bill<span className="text-purple-600">Buddy</span>
+      </h1>
+    </div>
+  );
+};
+// -----------------------------------------------------
 
 export default function BillDetail({ user, onLogout }) {
   const { billId } = useParams();
@@ -30,10 +85,10 @@ export default function BillDetail({ user, onLogout }) {
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Shield className="w-8 h-8 text-purple-600" />
-            <h1 className="text-2xl font-bold text-gray-900">BillBuddy</h1>
-          </div>
+          
+          {/* LOGO IMPLEMENTATION */}
+          <BillBuddyNavLogo />
+          
           <div className="flex items-center gap-4">
             <div className="text-right hidden md:block">
               <p className="text-sm text-gray-500">Welcome back,</p>

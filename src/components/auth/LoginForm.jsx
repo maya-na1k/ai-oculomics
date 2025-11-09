@@ -2,6 +2,53 @@ import { useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { Shield, AlertCircle } from 'lucide-react';
 
+// --- BillBuddy Logo Component ---
+const BillBuddyLogo = () => {
+  return (
+    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl mb-4 shadow-lg p-3">
+      <svg
+        viewBox="0 0 100 100"
+        className="w-full h-full"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Document outline */}
+        <path
+          d="M20 10 C20 7 22 5 25 5 L65 5 L80 20 L80 90 C80 93 78 95 75 95 L25 95 C22 95 20 93 20 90 Z"
+          stroke="white"
+          strokeWidth="6"
+          fill="rgba(255,255,255,0.2)"
+        />
+        
+        {/* Folded corner */}
+        <path
+          d="M65 5 L65 20 L80 20"
+          stroke="white"
+          strokeWidth="6"
+          fill="rgba(255,255,255,0.3)"
+        />
+        
+        {/* Human icon in upper portion */}
+        <circle cx="42" cy="32" r="8" fill="white" />
+        <path 
+          d="M42 42c-6 0-10 3-10 7v4c0 1 1 2 2 2h16c1 0 2-1 2-2v-4c0-4-4-7-10-7z" 
+          fill="white"
+        />
+        
+        {/* Lines on document */}
+        <line x1="30" y1="62" x2="60" y2="62" stroke="white" strokeWidth="3" strokeLinecap="round" />
+        <line x1="30" y1="70" x2="60" y2="70" stroke="white" strokeWidth="3" strokeLinecap="round" />
+        <line x1="30" y1="78" x2="50" y2="78" stroke="white" strokeWidth="3" strokeLinecap="round" />
+        
+        {/* Dollar sign circle */}
+        <circle cx="65" cy="72" r="16" fill="white" />
+        <text x="65" y="81" fontSize="22" fill="#7C3AED" fontWeight="bold" textAnchor="middle">$</text>
+      </svg>
+    </div>
+  );
+};
+// -----------------------------------------------------
+
 export default function LoginForm({ onToggleForm }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,9 +81,9 @@ export default function LoginForm({ onToggleForm }) {
       <div className="max-w-md w-full">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl mb-4 shadow-lg">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
+          {/* LOGO IMPLEMENTATION */}
+          <BillBuddyLogo />
+          
           <h2 className="text-4xl font-bold text-gray-900 mb-2">
             Welcome back
           </h2>
